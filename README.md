@@ -2,30 +2,37 @@ Brock Nicoletti
 CSCI 240
 Project Proposal
 
-Idea 1: a way to see what SnowBowl run you have the greatest chance of getting hurt on based on things like age, gender, ski/board, rental/owned, weather conditions, level of skill, group size, etc.
-Example input: ‘ I’m 16  male going skiing on rental powder skis, with a group of three other friends, all expert level, all skiers, overcast Monday.’
-Example output: Most likely to get hurt on XXXX location.
-
-Input: Show me the runs most women get hurt on.
-Input: Show me the day most head injuries occur.
-Input: show me the month with most helicopter evac.
  - - - - - - - - - - - - - - - - - - - - - - - - - - 
-**1) Database Description:** Snowbowl Incident Report
+**1) Database Description:** Incident Reporting for Snowbowl Ski Area
+
 **2) Entities and their descriptions:**
-  1) Gender - M / F / NB
-  2) Ski/Board - Ski / Snowboard
-  3) Own/Rental - Do you own your gear? / Are you using 'new-to-you' gear?
-  4) Width - Underfoot width of equipment
-  5) Skill Level - Beginner / Intermediate / Advanced / Expert
-  6) Group Size - Group of 1 (solo) or greater
-  7) Day of week - M / T / Etc.
-  8) Precipitation Conditions - None / Light Snow / Heavy Snow / Rain
-  9) Visibility Conditions - Clear / Overcast / Obscured
-  10) Snow Conditions - Powder / Crust / Hardpack 
-  11) Ski Runs - List of ski runs
-  12) On-hill Responses - Curtousey Ride / Tobaggin Ride / On-hill aid / Aid room aid
-  13) Additional Services Requested - Ambulance / Air Lift
+    18 entities, 4 types.
+    - - - - - - - - - - -
+    2.1 Individual Information:
+        1) Name - Individuals Name
+        2) Gender - M / F / NB / O
+        3) Personal Contact - Phone Number
+        4) Emergency Contact - Phone Number
+        5) Skill Level - Beginner / Intermediate / Advanced / Expert
+    2.2 Equipment Information:
+        6) Personal or Rental Gear ?
+        7) Helmet ?
+        8) Underfoot Width - Narrow or 'fat' skis/snowboard
+    2.3 Enviorment Information:
+        9) Group Size - 1 or more
+        10) Day of the week 
+        11) Precipitation Conditions - None / Light Snow / Heavy Snow / Rain
+        12) Visibility Conditions - Clear / Overcast / Obscured
+        13) Snow Conditions - Powder / Crust / Hardpack / "Spring Corn"
+        14) Time of Incident
+        15) Ski Run ?
+    2.4 Incident and Response Information:
+        16) On-Hill Response - Courtesy Ride / Toboggan Ride / On-Hill Aid / Aid Room Aid
+        17) Additional Services Requested - None / Ambulance / Air Lift
+        18) Patrol Member(s) Involved
+        
 **3) Questions:**
-   1) Which runs are teenage boys most likely to get hurt on?
-   2) Which day of the week see most head injuries?
-   3) Which month had most additional services requested?
+   1) Identify high-risk runs
+   2) Analyzing days with a higher number of specific injuries
+   3) Assessing the severity of injuries and need for external services in specific months
+   4) Provide insights into the effectiveness of helmets in preventing or minimizing injuries
