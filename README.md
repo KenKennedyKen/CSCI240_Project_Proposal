@@ -36,3 +36,6 @@ Project Proposal
    2) Analyzing days with a higher number of specific injuries
    3) Assessing the severity of injuries and need for external services in specific months
    4) Provide insights into the effectiveness of helmets in preventing or minimizing injuries
+----
+what the hell are you talking about?
+commit made for git assignment??
