@@ -12,3 +12,6 @@ def second_page():
     skill_level = request.form['skill_level']
     age = request.form['age']
     return render_template('second_page.html', name=name, skill_level=skill_level, age=age)
+
+if __name__ == '__main__':
+    app.run(port=8000, debug=True, host="0.0.0.0")
