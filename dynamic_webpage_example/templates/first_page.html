@@ -7,8 +7,15 @@
 	<h1>Adventurer Information</h1>
 	<form action="/second_page" method="POST">
 		Name: <input type="text" name="name"><br>
-		Skill Level: <input type="text" name="skill_level"><br>
+		Skill Level:
+		<select name="skill_level">
+			<option value="Beginner">Beginner</option>
+			<option value="Intermediate">Intermediate</option>
+			<option value="Advanced">Advanced</option>
+			<option value="Expert">Expert</option>
+		</select><br>
 		Age: <input type="text" name="age"><br>
+		<!--Life Insurance: <input type="checkbox" name="life_insurance" value="1"><br>-->
 		<input type="submit" value="Submit">
 	</form>
 </body>
