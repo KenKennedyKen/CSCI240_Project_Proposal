@@ -31,7 +31,7 @@
                 <td>{{ row[2] }}</td>
                 <td>
                     <a href="/update/{{ row[3] }}">Update</a> |
-                    <a href="/delete/{{ row[3] }}">Delete</a>
+                    <a href="/delete/{{ row[3] }}" onclick="return confirm('Are you sure? They will cry . . .')">Delete</a>
                 </td>
             </tr>
             {% endfor %}
