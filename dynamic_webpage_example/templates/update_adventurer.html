@@ -1,0 +1,21 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Update Adventurer</title>
+</head>
+<body>
+    <h1>Update Adventurer</h1>
+    <form action="/update/{{ id }}" method="POST">
+        Name: <input type="text" name="name" value="{{ adventurer[0] }}"><br>
+        Skill Level:
+		<select name="skill_level">
+			<option value="Beginner">Beginner</option>
+			<option value="Intermediate">Intermediate</option>
+			<option value="Advanced">Advanced</option>
+			<option value="Expert">Expert</option>
+		</select><br>
+        Age: <input type="text" name="age" value="{{ adventurer[2] }}"><br>
+        <input type="submit" value="Update">
+    </form>
+</body>
+</html>

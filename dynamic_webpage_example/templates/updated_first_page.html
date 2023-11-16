@@ -1,0 +1,56 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>WildTimes</title>
+    <style>
+		table, th, td {
+			border: 3px salmon solid;
+			border-collapse: separate;
+			fill: burlywood;
+		}
+	</style>
+</head>
+<body>
+    <h1>Adventurer Information</h1>
+
+    <!-- Table to Display Adventurers -->
+    <table>
+        <thead>
+            <tr>
+                <th>Name</th>
+                <th>Skill Level</th>
+                <th>Age</th>
+                <th>Actions</th>
+            </tr>
+        </thead>
+        <tbody>
+            {% for row in data %}
+            <tr>
+                <td>{{ row[0] }}</td>
+                <td>{{ row[1] }}</td>
+                <td>{{ row[2] }}</td>
+                <td>
+                    <a href="/update/{{ row[3] }}">Update</a> |
+                    <a href="/delete/{{ row[3] }}">Delete</a>
+                </td>
+            </tr>
+            {% endfor %}
+        </tbody>
+    </table>
+
+    <!-- Form to Add a New Adventurer -->
+    <h2>Add New Adventurer</h2>
+    <form action="/add" method="POST">
+        Name: <input type="text" name="name"><br>
+        Skill Level:
+		<select name="skill_level">
+			<option value="Beginner">Beginner</option>
+			<option value="Intermediate">Intermediate</option>
+			<option value="Advanced">Advanced</option>
+			<option value="Expert">Expert</option>
+		</select><br>
+        Age: <input type="text" name="age"><br>
+        <input type="submit" value="Add Adventurer">
+    </form>
+</body>
+</html>
