@@ -42,6 +42,8 @@ def index():
 
     return render_template('updated_first_page.html', data=data)
 
+
+# implement add route
 @app.route('/add', methods=['POST'])
 def add_adventurer():
     # Extract form data
