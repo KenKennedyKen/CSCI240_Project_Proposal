@@ -19,9 +19,13 @@ def get_db_connection():
         database=secrets['db']
     )
 
-# define the root url route
-@app.route('/', methods=['GET', 'POST'])
-def index():
+@app.route('/')
+def home():
+    return render_template('HOME.html')
+
+# 
+@app.route('/participants', methods=['GET', 'POST'])
+def show_participants():
     connection = get_db_connection()
     cursor = connection.cursor()
 
@@ -40,7 +44,7 @@ def index():
     cursor.close()
     connection.close()
 
-    return render_template('updated_first_page.html', data=data)
+    return render_template('PARTICIPANTS.html', data=data)
 
 
 # implement add route
@@ -61,7 +65,7 @@ def add_adventurer():
     cursor.close()
     connection.close()
 
-    return redirect(url_for('index'))
+    return redirect(url_for('home'))
 
 
 # implement the update route
@@ -78,7 +82,7 @@ def update_adventurer(id):
         query = "UPDATE Participants SET Name = %s, Skill = %s, Age = %s WHERE ID = %s"
         cursor.execute(query, (name, skill_level, age, id))
         connection.commit()
-        return redirect(url_for('index'))
+        return redirect(url_for('show_participants'))
     
     # GET request ; Fetch existing data and display in a form
     cursor.execute("SELECT Name, Skill, Age FROM Participants WHERE ID = %s", (id,))
@@ -97,7 +101,7 @@ def delete_adventurer(id):
     connection.commit()
     cursor.close()
     connection.close()
-    return redirect(url_for('index'))
+    return redirect(url_for('show_participants'))
 
 if __name__ == '__main__':
     app.run(port=8000, debug=True, host="0.0.0.0")
