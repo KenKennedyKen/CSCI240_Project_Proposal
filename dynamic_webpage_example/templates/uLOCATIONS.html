@@ -1,0 +1,15 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Update Location</title>
+</head>
+<body>
+    <h1>Update Location</h1>
+    <form action="/location/update/{{ id }}" method="POST">
+        Location Name: <input type="text" name="location_name" value="{{ location[0] }}"><br>
+        Region: <input type="text" name="region" value="{{ location[1] }}"><br>
+        Altitude In Feet: <input type="number" name="altitude_in_feet" value="{{ location[2] }}"><br>
+        <input type="submit" value="Update">
+    </form>
+</body>
+</html>

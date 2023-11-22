@@ -1,0 +1,20 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Update an Activity</title>
+</head>
+<body>
+    <h1>Update an Activity</h1>
+    <form action="/activities/update/{{ id }}" method="POST">
+        Activity Name: <input type="text" name="activity_name" value="{{ activity[1] }}"><br>
+        Difficulty Level:
+		<select name="difficulty_level">
+			<option value="Beginner">Beginner</option>
+			<option value="Intermediate">Intermediate</option>
+			<option value="Advanced">Advanced</option>
+			<option value="Expert">Expert</option>
+		</select><br>
+        <input type="submit" value="Update">
+    </form>
+</body>
+</html>

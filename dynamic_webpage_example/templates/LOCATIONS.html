@@ -5,9 +5,40 @@
     <link rel="stylesheet" type="text/css" href="{{ url_for('static', filename='COLOR.css') }}">
 </head>
 <body>
-    <h1>Locations</h1>
-    <!-- add form and table for locations here-->
-    <!-- similar to participants page, but tailored for locations -->
+    <h1>Current Locations</h1>
+    <!-- table to display locations-->
+    <table>
+        <thead>
+            <tr>
+                <th>Location Name</th>
+                <th>Region</th>
+                <th>Altitude in Feet</th>
+                <th>Actions</th>
+            </tr>
+        </thead>
+        <tbody>
+            {% for location in locations %}
+            <tr>
+                <td>{{ location[0] }}</td>
+                <td>{{ location[1] }}</td>
+                <td>{{ location[2] }}</td>
+                <td>
+                    <a href="{{ url_for('update_location', id=location[3]) }}">Update</a>
+                    <a href="{{ url_for('delete_location', id=location[3]) }}" onclick="return confirm('Just swallowed by the earth, huh?')">Delete</a>
+                </td>
+            </tr>
+            {% endfor %}
+        </tbody>
+    </table>
+
+    <h2>Add New Location</h2>
+    <form action="/locations" method="POST">
+        Location Name: <input type="text" name="location_name" required><br>
+        Region: <input type="text" name="region" required><br>
+        Altitude In Feet: <input type="number" name="altitude_in_feet" required><br>
+        <input type="submit" value="Add Location">
+    </form>
+
     <a href="{{ url_for('home') }}">Back to Home</a>
 </body>
 </html>

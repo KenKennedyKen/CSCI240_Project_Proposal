@@ -2,12 +2,47 @@
 <html>
 <head>
     <title>Activities - WildTimesAdventureLog</title>
-    <link rel="stylesheet" type="text/css" href="{{ url_for('static', filename='style.css') }}">
+    <link rel="stylesheet" type="text/css" href="{{ url_for('static', filename='COLOR.css') }}">
 </head>
 <body>
-    <h1>Activities</h1>
-    <!-- Add your form and table for activities here -->
+    <h1>Noted Activities</h1>
+    <!-- table to display activities  -->
+    <table>
+        <thead>
+            <tr>
+                <th>Activity Name</th>
+                <th>Difficulty Level</th>
+                <th>Actions</th>
+            </tr>
+        </thead>
+        <tbody>
+            {% for activity in activities %}
+            <tr>
+                <td>{{ activity[1] }}</td> <!-- ActivityName-->
+                <td>{{ activity[2] }}</td> <!-- DifficultyLevel-->
+                <td>
+                    <a href="{{ url_for('update_activity', id=activity[0]) }}">Update</a>
+                    <a href="{{ url_for('delete_activity', id=activity[0]) }}" onclick="return confirm('Just didnt happen I guess?')">Delete</a>
+                </td>
+            </tr>
+            {% endfor %}
+        </tbody>
+    </table>
+
     <!-- Include the necessary forms for creating and managing activities -->
+    <h2>Add New Activity</h2>
+    <form action="/activities" method="POST">
+        Activity Name: <input type="text" name="activity_name" required><br>
+        Difficulty Level:
+        <select name="difficulty_level" required>
+			<option value="Beginner">Beginner</option>
+			<option value="Intermediate">Intermediate</option>
+			<option value="Advanced">Advanced</option>
+			<option value="Expert">Expert</option>
+		</select><br>
+        <input type="submit" value="Add Activity">
+    </form>
+
     <a href="{{ url_for('home') }}">Back to Home</a>
 </body>
 </html>
