@@ -25,7 +25,30 @@ def get_db_connection():
 
 @app.route('/')
 def home():
-    return render_template('HOME.html')
+    connection = get_db_connection()
+    cursor = connection.cursor()
+
+    query= """SELECT 
+        AdventureLog.ID, 
+        AdventureLog.Date,
+        AdventureLog.Time,
+        Location.LocationName, 
+        Activity.ActivityName, 
+        GROUP_CONCAT(DISTINCT Participants.Name ORDER BY Participants.Name ASC SEPARATOR ', ') AS ParticipantsNames
+    FROM AdventureLog
+    JOIN Location ON AdventureLog.LocationID = Location.ID
+    JOIN Activity ON AdventureLog.ActivityID = Activity.ID
+    LEFT JOIN AdventureLog_Participant ON AdventureLog.ID = AdventureLog_Participant.LogID
+    LEFT JOIN Participants ON AdventureLog_Participant.ParticipantID = Participants.ID
+    GROUP BY AdventureLog.ID, AdventureLog.Date, AdventureLog.Time, Location.LocationName, Activity.ActivityName
+   """
+
+    cursor.execute(query)
+    adventure_logs = cursor.fetchall()
+
+    cursor.close()
+    connection.close()
+    return render_template('HOME.html', adventure_logs=adventure_logs)
 
 # Participants Page
 @app.route('/participants', methods=['GET', 'POST'])

@@ -9,10 +9,10 @@
         Name: <input type="text" name="name" value="{{ adventurer[0] }}"><br>
         Skill Level:
 		<select name="skill_level">
-			<option value="Beginner">Beginner</option>
-			<option value="Intermediate">Intermediate</option>
-			<option value="Advanced">Advanced</option>
-			<option value="Expert">Expert</option>
+			<option value="Beginner" {% if adventurer[1] == 'Beginner' %}selected{% endif %}>Beginner</option>
+            <option value="Intermediate" {% if adventurer[1] == 'Intermediate' %}selected{% endif %}>Intermediate</option>
+            <option value="Advanced" {% if adventurer[1] == 'Advanced' %}selected{% endif %}>Advanced</option>
+            <option value="Expert" {% if adventurer[1] == 'Expert' %}selected{% endif %}>Expert</option>
 		</select><br>
         Age: <input type="text" name="age" value="{{ adventurer[2] }}"><br>
         <input type="submit" value="Update">

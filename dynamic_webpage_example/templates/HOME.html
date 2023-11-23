@@ -5,15 +5,40 @@
     <link rel="stylesheet" type="text/css" href="{{ url_for('static', filename='COLOR.css') }}">
 </head>
 <body>
-    <h1>|WildTimes WelcomesYou to WildTimes' WelcomePage for WildTimes
-        You'reWelcome|
+    <h1>|WildTimes WelcomesYou to WildTimes' WelcomePage for WildTimes. You'reWelcome|
     </h1>
+       <!-- Adventure Log Table -->
+       <h2>Adventure Log</h2>
+       <table>
+           <thead>
+               <tr>
+                   <!-- column names -->
+                   <!-- <th>ID</th> -->
+                   <th>Date</th>
+                   <th>Time</th>
+                   <th>Location</th>
+                   <th>Activity</th>
+                   <th>Participants</th>
+               </tr>
+           </thead>
+           <tbody>
+               {% for log in adventure_logs %}
+               <tr>
+                   <!-- <td>{{ log[0] }}</td>  Column 1 Value -->
+                   <td>{{ log[1] }}</td> <!-- Column 2 Value -->
+                   <td>{{ log[2] }}</td> <!-- Column 3 Value -->
+                   <td>{{ log[3] }}</td> <!-- Column 4 Value -->
+                   <td>{{ log[4] }}</td> <!-- Column 5 Value -->
+                   <td>{{ log[5] }}</td> <!-- Column 6 Value -->
+               </tr>
+               {% endfor %}
+           </tbody>
+       </table>
     <nav>
         <ul>
             <li><a href="/participants">Participants</a></li>
             <li><a href="/activities">Activities</a></li>
             <li><a href="/locations">Locations</a></li>
-            <li><a href="/adventure-log">Adventure Log</a></li>
         </ul>
     </nav>
 </body>
