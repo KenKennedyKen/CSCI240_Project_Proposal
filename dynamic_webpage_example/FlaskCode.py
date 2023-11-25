@@ -5,9 +5,9 @@ from flask import Flask, render_template, request, redirect, url_for, flash
 from mysql.connector import IntegrityError
 from datetime import datetime, date
 
-secret_key = os.urandom(16)
+# secret_key = os.urandom(16)
 app = Flask(__name__)
-app.secret_key = secret_key
+app.secret_key = 'your_mom_said_stay_static'
 
 dir_path = os.path.dirname(os.path.realpath(__file__))
 
@@ -231,10 +231,13 @@ def delete_activity(id):
         # Handle the error by redirecting to an error page or showing a message
         # Here, we'll just flash a message and redirect back to the activities page
         flash("This activity can't be deleted right now because it is logged in the AdventureLog.")
-        return redirect(url_for('show_activities'))
-
-    cursor.close()
+    except Exception as E:
+        # this block will run for any other kind of unexpected database error
+        flash('An unexpected error occured: ' + str(e))
+    finally:
+        cursor.close()
     connection.close()
+
     return redirect(url_for('show_activities'))
 
 
