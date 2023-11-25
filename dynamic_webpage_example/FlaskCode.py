@@ -3,6 +3,7 @@ import os
 import mysql.connector
 from flask import Flask, render_template, request, redirect, url_for, flash
 from mysql.connector import IntegrityError
+from datetime import datetime, date
 
 secret_key = os.urandom(16)
 app = Flask(__name__)
@@ -46,9 +47,23 @@ def home():
     cursor.execute(query)
     adventure_logs = cursor.fetchall()
 
+    # define formatted_log here to collect the formatted log entries
+    formatted_logs = []
+    for log in adventure_logs:
+        # check if the date is already a datetime.date object
+        if isinstance(log[1], date):
+            formatted_date = log[1].strftime('%m-%d-%Y')
+        else:
+            # if its a string, convert to date object then format
+            formatted_date = datetime.strptime(log[1], '%Y-%m-%d').strftime('%m-%d-%Y')
+        # create a new tuple with the formatted date and the rest of the log date
+        formatted_log_entry = (log[0], formatted_date) + log[2:]
+        formatted_logs.append(formatted_log_entry)
+
     cursor.close()
     connection.close()
-    return render_template('HOME.html', adventure_logs=adventure_logs)
+    # pass the formatted logs to the template
+    return render_template('HOME.html', adventure_logs=formatted_logs)
 
 # Participants Page
 @app.route('/participants', methods=['GET', 'POST'])
