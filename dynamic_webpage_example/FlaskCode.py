@@ -22,6 +22,8 @@ def get_db_connection():
         port=secrets['port'],
         database=secrets['db']
     )
+
+
 # Home Page
 
 @app.route('/')
@@ -65,7 +67,9 @@ def home():
     # pass the formatted logs to the template
     return render_template('HOME.html', adventure_logs=formatted_logs)
 
+# Participants
 # Participants Page
+
 @app.route('/participants', methods=['GET', 'POST'])
 def show_participants():
     connection = get_db_connection()
@@ -88,7 +92,9 @@ def show_participants():
 
     return render_template('PARTICIPANTS.html', data=data)
 
+# update
 # implement the update route for the participant table
+
 @app.route('/update/<int:id>', methods=['GET','POST'])
 def update_adventurer(id):
     connection = get_db_connection()
@@ -111,18 +117,32 @@ def update_adventurer(id):
     connection.close
     return render_template('uPARTICIPANTS.html', adventurer=adventurer, id=id)
 
+# delete
 # implement the delete route for participant table
+
 @app.route('/delete/<int:id>')
 def delete_adventurer(id):
     connection = get_db_connection()
     cursor = connection.cursor()
-    cursor.execute("DELETE FROM Participants WHERE ID = %s", (id,))
-    connection.commit()
-    cursor.close()
-    connection.close()
+
+    try:
+        cursor.execute("DELETE FROM Participants WHERE ID = %s", (id,))
+        connection.commit()
+    except IntegrityError:
+        # This block will run if a foreign key constraint prevents deletion
+        flash('This Participant cannot be deleted because they are linked to one or more AdventureLogs!')
+    except Exception as e:
+        # this block will run for any other kind of unexpected database errors
+        flash('An unexpected error occured: '+ str(e))
+    finally:
+        cursor.close()
+        connection.close()
+        
     return redirect(url_for('show_participants'))
 
+# Location
 # Location Page
+
 @app.route('/locations', methods=['GET', 'POST'])
 def show_locations():
     connection = get_db_connection()
@@ -143,7 +163,9 @@ def show_locations():
     connection.close()
     return render_template('LOCATIONS.html', locations=locations)
 
+# update
 # esatablish update capabilities for location table
+
 @app.route('/location/update/<int:id>', methods=['GET','POST'])
 def update_location(id):
     connection = get_db_connection()
@@ -166,18 +188,32 @@ def update_location(id):
     connection.close()
     return render_template('uLOCATIONS.html', location=location, id=id)
 
+# delete
 # Delete from Location Table
+
 @app.route('/locations/delete/<int:id>')
 def delete_location(id):
     connection = get_db_connection()
     cursor = connection.cursor()
-    cursor.execute("DELETE FROM Location WHERE ID = %s", (id,))
-    connection.commit()
-    cursor.close()
-    connection.close()
+
+    try:
+        cursor.execute("DELETE FROM Location WHERE ID = %s", (id,))
+        connection.commit()
+    except IntegrityError:
+        # This block will run if a foreign key constraing prevents deletion
+        flash('This Location cannot be  deleted because it is linked to one or more AdventureLogs!')
+    except Exception as e:
+        # This block will run for any other kinds of unexpected errors
+        flash('An unexpected error occured: ' + str(e))
+    finally:
+        cursor.close()
+        connection.close()
+    
     return redirect(url_for('show_locations'))
 
+# Activity
 # Activity Page
+
 @app.route('/activities', methods=['GET', 'POST'])
 def show_activities():
     connection = get_db_connection()
@@ -197,7 +233,9 @@ def show_activities():
     connection.close()
     return render_template('ACTIVITIES.html', activities=activities)
 
+# update
 # Update capabilities for activity table
+
 @app.route('/activities/update/<int:id>', methods=['GET','POST'])
 def update_activity(id):
     connection = get_db_connection()
@@ -219,7 +257,9 @@ def update_activity(id):
     connection.close()
     return render_template('uACTIVITIES.html', activity=activity, id=id)
 
+# delete
 # Delete from Activity Table
+
 @app.route('/activities/delete/<int:id>')
 def delete_activity(id):
     connection = get_db_connection()

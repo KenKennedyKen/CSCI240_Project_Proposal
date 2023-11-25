@@ -5,6 +5,18 @@
     <link rel="stylesheet" type="text/css" href="{{ url_for('static', filename='COLOR.css') }}">
 </head>
 <body>
+
+<!-- Flash messages here-->
+{% with messages = get_flashed_messages() %}
+  {% if messages %}
+    <div class="flash-messages">
+        {% for message in messages %}
+          <div class="flash-message">{{ message }}</div>
+        {% endfor %}
+    </div>
+  {% endif %}
+{% endwith %}
+
     <h1>Participant Information</h1>
 
     <!-- Table to Display Adventurers -->
