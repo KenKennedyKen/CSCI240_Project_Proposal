@@ -1,0 +1,58 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>New Adventure - WildTimesAdventureLog</title>
+    <link rel="stylesheet" type="text/css" href="{{ url_for('static', filename='COLOR.css') }}">
+</head>
+<body>
+    {% with messages = get_flashed_messages() %}
+        {% if messages %}
+            <ul class="flashes">
+                {% for message in messages %}
+                    <li>{{ message }}</li>
+                {% endfor %}
+            </ul>
+        {% endif %}
+    {% endwith %}
+    <h1>Create A New Adventure</h1>
+    <form action="{{ url_for('create_adventure_log') }}" method="POST">
+
+        <label for="participant">Choose a participant:</label>
+        <select name="participant" id="participant" multiple>
+            <!-- Options populated from Participants table-->
+            {% for participant in participants %}
+                <option value="{{ participant[0] }}">{{ participant[1] }}</option>
+            {% endfor %}
+        </select>
+
+        <label for="location">Choose a location:</label>
+        <select name="location" id="location">
+            <!-- options populated from Locations table-->
+            {% for location in locations %}
+                <option value="{{ location[0] }}">{{ location[1] }}</option>
+            {% endfor %}
+        </select>
+
+        <label for="activity">Choose an activity:</label>
+        <select name="activity" id="activity">
+            <!--populate from Activities table-->
+            {% for activity in activities %}
+                <option value="{{ activity[0] }}">{{ activity[1] }}</option>
+            {% endfor %}
+        </select>
+
+        <label for="duration_in_hours">Duration in Hours:</label>
+        <input type="number" name="duration_in_hours" id="duration_in_hours" required>
+
+        <label for="date">Date:</label>
+        <input type="date" name="date" required>
+
+        <label for="time">Time:</label>
+        <input type="time" name="time" required>
+
+        <button type="submit">Create Adventure Log</button>
+    </form>
+
+    <a href="{{ url_for('home') }}">Back to Home</a>
+</body>
+</html>

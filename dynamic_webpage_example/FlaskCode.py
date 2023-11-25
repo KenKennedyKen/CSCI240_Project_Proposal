@@ -30,7 +30,7 @@ def get_db_connection():
 def home():
     connection = get_db_connection()
     cursor = connection.cursor()
-
+    # Show the adventure log
     query= """SELECT 
         AdventureLog.ID, 
         AdventureLog.Date,
@@ -66,6 +66,77 @@ def home():
     connection.close()
     # pass the formatted logs to the template
     return render_template('HOME.html', adventure_logs=formatted_logs)
+
+# Adventure Log
+# Adventure Log page / Create Adventure Log
+
+@app.route('/create_adventure_log', methods=['POST'])
+def create_adventure_log():
+    # This function will handle creating a new Adventure Log entry
+    # with the provided participant, location, activity, date, and time
+    connection = get_db_connection()
+    cursor = connection.cursor()
+
+    # Extract the form data
+    participant_ids = request.form.get('participant') # this will be a list if multiple participants are selected
+    location_id = request.form.get('location')
+    activity_id = request.form.get('activity')
+    date = request.form.get('date')
+    time = request.form.get('time')
+    duration_in_hours = request.form.get('duration_in_hours')
+
+    # Construct and execute the sql query to insert a new AdventureLog entry
+    try:
+        adventure_log_query = """
+            INSERT INTO AdventureLog (Date, Time, LocationID, ActivityID, DurationInHours)
+            VALUES (%s, %s, %s, %s, %s)
+            """
+        print("executing SQL query:", adventure_log_query)
+        print("with parameters:", (date, time, location_id, activity_id, duration_in_hours))
+
+        cursor.execute(adventure_log_query, (date, time, location_id, activity_id, duration_in_hours))
+        adventure_log_id = cursor.lastrowid
+
+        for pid in participant_id.split(','):
+            adventure_log_participant_query = """
+                INSERT INTO AdventureLog_Participant (LogID, ParticipantID)
+                VALUES (%s, %s)
+            """
+        cursor.execute(adventure_log_participant_query, (adventure_log_id, pid.strip()))
+        
+        connection.commit()
+        flash('New Adventure Log enrty created successfully')
+
+    except Exception as e:
+        # if an error occurs, rollback the transaction and flash an error message
+        connection.rollback()
+        flash('An error occured while creating this Adventure Log entry: ' + str(e))
+    finally: 
+        cursor.close()
+        connection.close()
+    return redirect(url_for('new_adventure'))
+
+@app.route('/new_adventure')
+def new_adventure():
+    connection = get_db_connection()
+    cursor = connection.cursor()
+
+    # fetch participants
+    cursor.execute("SELECT ID, Name FROM Participants")
+    participants = cursor.fetchall()
+
+    # fetch locations
+    cursor.execute("SELECT ID, LocationName FROM Location")
+    locations = cursor.fetchall()
+
+    # fetch activities
+    cursor.execute("SELECT ID, ActivityName FROM Activity")
+    activities = cursor.fetchall()
+
+    cursor.close()
+    connection.close()
+
+    return render_template('uADVENTURE_LOG.html', participants=participants, locations=locations, activities=activities)
 
 # Participants
 # Participants Page
@@ -137,7 +208,7 @@ def delete_adventurer(id):
     finally:
         cursor.close()
         connection.close()
-        
+
     return redirect(url_for('show_participants'))
 
 # Location
