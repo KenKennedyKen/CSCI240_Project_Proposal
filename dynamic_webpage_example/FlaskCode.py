@@ -283,7 +283,7 @@ def participant_history(participant_id):
     return render_template('hPARTICIPANTS.html', participant_name=participant_name, locations=locations, friends=friends, activities=activities)
 
 
-# update
+# update participant
 # implement the update route for the participant table
 
 @app.route('/update/<int:id>', methods=['GET','POST'])
@@ -308,7 +308,7 @@ def update_adventurer(id):
     connection.close
     return render_template('uPARTICIPANTS.html', adventurer=adventurer, id=id)
 
-# delete
+# delete participant
 # implement the delete route for participant table
 
 @app.route('/delete/<int:id>')
@@ -331,6 +331,7 @@ def delete_adventurer(id):
 
     return redirect(url_for('show_participants'))
 
+# #
 # Location
 # Location Page
 
@@ -354,7 +355,39 @@ def show_locations():
     connection.close()
     return render_template('LOCATIONS.html', locations=locations)
 
-# update
+
+# history at location
+# establish who's been to a location
+@app.route('/location_history/<int:location_id>')
+def location_history(location_id):
+    connection = get_db_connection()
+    cursor = connection.cursor()
+    
+    # get location name for header
+    cursor.execute("SELECT LocationName FROM Location WHERE ID = %s", (location_id,))
+    location_name = cursor.fetchone()
+    if location_name is None:
+        flash('Location not found.')
+        return redirect(url_for('show_locations'))
+    location_name = location_name[0]
+
+    # get all participants who visited that location
+    cursor.execute("""
+                   SELECT DISTINCT Participants.Name
+                   FROM Participants
+                   JOIN AdventureLog_Participant ON Participants.ID = AdventureLog_Participant.ParticipantID
+                   JOIN AdventureLog ON AdventureLog_Participant.LogID = AdventureLog.ID
+                   WHERE AdventureLog.LocationID = %s
+                   """, (location_id,))
+    participants = cursor.fetchall()
+
+    cursor.close()
+    connection.close()
+
+    return render_template('hLOCATIONS.html', location_name=location_name, participants=participants)
+
+
+# update Location
 # esatablish update capabilities for location table
 
 @app.route('/location/update/<int:id>', methods=['GET','POST'])

@@ -1,0 +1,22 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>{{ location_name }}'s History - WildTimesAdventureLog</title>
+    <link rel="stylesheet" type="text/css" href="{{ url_for('static', filename='COLOR.css') }}">
+
+</head>
+<body>
+    <h1>History for {{ location_name }}</h1>
+    <h2>Participants who have visited:</h2>
+    <ul>
+        {% for participant in participants %}
+            <li>{{ participant[0] }}</li>
+        {% else %}
+            <li>No one been here !</li>
+        {% endfor %}
+    </ul>
+
+    <a href="{{ url_for('show_locations') }}">Back to Locations</a>
+    <a href="{{ url_for('home') }}">Back to Home</a>
+</body>
+</html>

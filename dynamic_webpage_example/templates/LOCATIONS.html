@@ -35,6 +35,7 @@
                 <td>{{ location[1] }}</td>
                 <td>{{ location[2] }}</td>
                 <td>
+                    <a href="{{ url_for('location_history', location_id=location[3]) }}">History</a>
                     <a href="{{ url_for('update_location', id=location[3]) }}">Update</a>
                     <a href="{{ url_for('delete_location', id=location[3]) }}" onclick="return confirm('Just swallowed by the earth, huh?')">Delete</a>
                 </td>
