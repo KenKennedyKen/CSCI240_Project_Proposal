@@ -23,7 +23,7 @@ def get_db_connection():
         database=secrets['db']
     )
 
-
+# # # # #
 # Home Page
 
 @app.route('/')
@@ -68,7 +68,7 @@ def home():
     return render_template('HOME.html', adventure_logs=formatted_logs)
 
 # Adventure Log
-# Adventure Log page 
+# Adventure Log table
 
 @app.route('/new_adventure')
 def new_adventure():
@@ -93,7 +93,7 @@ def new_adventure():
     return render_template('uADVENTURE_LOG.html', participants=participants, locations=locations, activities=activities)
 
 # Adventure Log
-# / Create Adventure Log
+#  Create New Adventure Log
 @app.route('/create_adventure_log', methods=['POST'])
 def create_adventure_log():
     # This function will handle creating a new Adventure Log entry
@@ -102,7 +102,7 @@ def create_adventure_log():
     cursor = connection.cursor()
 
     # Extract the form data
-    participant_ids = request.form.get('participant') # this will be a list if multiple participants are selected
+    participant_ids = request.form.getlist('participant') # this will be a list if multiple participants are selected
     location_id = request.form.get('location')
     activity_id = request.form.get('activity')
     date = request.form.get('date')
@@ -121,7 +121,7 @@ def create_adventure_log():
         cursor.execute(adventure_log_query, (date, time, location_id, activity_id, duration_in_hours))
         adventure_log_id = cursor.lastrowid
 
-        if not isinstance(participant_ids, list):
+        if not isinstance(participant_ids, list): #  ensuring that if you find a lone adventurer, you still treat them as a part of a group for consistency.
             participant_ids = [participant_ids]
 
         for participant_id in participant_ids:
@@ -170,7 +170,8 @@ def delete_adventure_log(log_id):
 
     return redirect(url_for('home'))
 
-
+# # # #
+# #
 # Participants
 # Participants Page
 
@@ -195,6 +196,58 @@ def show_participants():
     connection.close()
 
     return render_template('PARTICIPANTS.html', data=data)
+
+# #
+# participant history
+# 
+@app.route('/participant_history/<int:participant_id>')
+def participant_history(participant_id):
+    connection = get_db_connection()
+    cursor = connection.cursor()
+
+    # get the participant name for header
+    cursor.execute("SELECT Name FROM Participants WHERE ID = %s", (participant_id,))
+    participant_name = cursor.fetchone()[0]
+
+    # get unique locations participant vistied
+    cursor.execute("""
+                   SELECT DISTINCT Location.LocationName
+                   FROM Location
+                   JOIN AdventureLog ON Location.ID = AdventureLog.LocationID
+                   JOIN AdventureLog_Participant ON AdventureLog.ID = AdventureLog_Participant.LogID
+                   WHERE AdventureLog_Participant.ParticipantID = %s
+                   """, (participant_id,))
+    locations= [location[0] for location in cursor.fetchall()]
+    print(locations)
+
+     # Get the unique activities the participant has done
+    cursor.execute("""
+        SELECT DISTINCT Activity.ActivityName
+        FROM Activity
+        JOIN AdventureLog ON Activity.ID = AdventureLog.ActivityID
+        JOIN AdventureLog_Participant ON AdventureLog.ID = AdventureLog_Participant.LogID
+        WHERE AdventureLog_Participant.ParticipantID = %s
+    """, (participant_id,))
+    activities = [activity[0] for activity in cursor.fetchall()]
+    print(activities)
+
+     # Get the other participants who have shared an adventure with this participant
+    cursor.execute("""
+        SELECT DISTINCT Participants.Name
+        FROM Participants
+        JOIN AdventureLog_Participant ON Participants.ID = AdventureLog_Participant.ParticipantID
+        JOIN AdventureLog ON AdventureLog_Participant.LogID = AdventureLog.ID
+        WHERE AdventureLog.ID IN (
+            SELECT LogID
+            FROM AdventureLog_Participant
+            WHERE ParticipantID = %s
+        ) AND Participants.ID != %s
+    """, (participant_id, participant_id))
+    friends = [friend[0] for friend in cursor.fetchall()]
+    print(friends)
+    
+    return render_template('hPARTICIPANTS.html', participant_name=participant_name, locations=locations, friends=friends, activities=activities)
+
 
 # update
 # implement the update route for the participant table

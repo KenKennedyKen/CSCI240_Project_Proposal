@@ -26,7 +26,7 @@
                 <th>Name</th>
                 <th>Skill Level</th>
                 <th>Age</th>
-                <th>Actions</th>
+                <th> : Actions : </th>
             </tr>
         </thead>
         <tbody>
@@ -36,6 +36,7 @@
                 <td>{{ row[1] }}</td>
                 <td>{{ row[2] }}</td>
                 <td>
+                    <a href="{{ url_for('participant_history', participant_id=row[3]) }}">History</a>
                     <a href="/update/{{ row[3] }}">Update</a> |
                     <a href="/delete/{{ row[3] }}" onclick="return confirm('Are you sure? They will cry . . .')">Delete</a>
                 </td>

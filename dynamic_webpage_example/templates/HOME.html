@@ -43,7 +43,7 @@
                    <td>{{ log[4] }}</td> <!-- Column 5 Value -->
                    <td>{{ log[5] }}</td> <!-- Column 6 Value -->
                    <td>
-                        <a href="{{ url_for('delete_adventure_log', log_id=log[0]) }}" onclick="return confirm('Sure, you can just delete memories you dont like . . .')">Delete</a>
+                        <a href="{{ url_for('delete_adventure_log', log_id=log[0]) }}" onclick="return confirm('Sure, you can just delete memories you dont like . . . Delete them . . forever?')">Delete</a>
                    </td>
                </tr>
                {% endfor %}
