@@ -22,6 +22,9 @@ def get_db_connection():
         port=secrets['port'],
         database=secrets['db']
     )
+def skill_level_to_num(skill_level):
+    levels = {'Beginner': 1, 'Intermediate': 2, 'Advanced': 3, 'Expert': 4}
+    return levels.get(skill_level, 0)
 
 # # # # #
 # Home Page
@@ -109,6 +112,37 @@ def create_adventure_log():
     time = request.form.get('time')
     duration_in_hours = request.form.get('duration_in_hours')
 
+    # fetch the skill level of selected entry
+    cursor.execute("SELECT DifficultyLevel FROM Activity WHERE ID = %s", (activity_id,))
+    activity_difficulty = cursor.fetchone()
+
+    # handeling error if actiity difficulty is none, the activity was not found
+    if activity_difficulty is None:
+        flash('Selected activity not found.')
+        return redirect(url_for('new_adventure'))
+    
+    activity_skill_level = skill_level_to_num(activity_difficulty[0])
+
+    # check the skill level of each participant
+    lowest_skill_level = None
+    for pid in participant_ids:
+        cursor.execute("SELECT Skill FROM Participants WHERE ID = %s", (int(pid),))
+        participant_skill = cursor.fetchone()
+        # if participant_skill is None, the participant was not found
+        if participant_skill is None:
+            flash('A selected participant not found.')
+            return redirect(url_for('new_adventure'))
+        
+        participant_skill_level = skill_level_to_num(participant_skill[0])
+        if lowest_skill_level is None or participant_skill_level < lowest_skill_level:
+            lowest_skill_level = participant_skill_level
+
+    # now comparing skill levels
+    if activity_skill_level > lowest_skill_level:
+        flash('The chosen activity is too advanced for some participants.')
+        return redirect(url_for('new_adventure'))
+    
+    # If the skill levels are appropriate
     # Construct and execute the sql query to insert a new AdventureLog entry
     try:
         adventure_log_query = """
@@ -245,7 +279,7 @@ def participant_history(participant_id):
     """, (participant_id, participant_id))
     friends = [friend[0] for friend in cursor.fetchall()]
     print(friends)
-    
+
     return render_template('hPARTICIPANTS.html', participant_name=participant_name, locations=locations, friends=friends, activities=activities)
 
 

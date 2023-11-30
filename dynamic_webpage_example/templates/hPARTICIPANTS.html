@@ -5,25 +5,8 @@
     <link rel="stylesheet" type="text/css" href="{{ url_for('static', filename='COLOR.css') }}">
 </head>
 <body>
-    {% with messages = get_flashed_messages() %}
-        {% if messages %}
-            <ul class="flashes">
-                {% for message in messages %}
-                    <li>{{ message }}</li>
-                {% endfor %}
-            </ul>
-        {% endif %}
-    {% endwith %}
 
     <h1>{{ participant_name }}'s Adventure History</h1>
-    <h2>Locations Been To:</h2>
-    <ul>
-        {% for location in locations %}
-            <li>{{ location }}</li>
-        {% else %}
-            <li>They ain't fuckin' been nowhere ! </li>
-        {% endfor %}
-    </ul>
     <h2>Friends With:</h2>
     <ul>
         {% for friend in friends %}
@@ -32,6 +15,16 @@
             <li>Nope, ain't got no friends neither !</li>
         {% endfor %}
     </ul>
+
+    <h2>Locations Been To:</h2>
+    <ul>
+        {% for location in locations %}
+            <li>{{ location }}</li>
+        {% else %}
+            <li>They ain't fuckin' been nowhere ! </li>
+        {% endfor %}
+    </ul>
+    
     <h2>Activities Participated In:</h2>
     <ul>
         {% for activity in activities %}
@@ -41,5 +34,6 @@
         {% endfor %}
     </ul>
     <a href="{{ url_for('show_participants') }}">Back to Participants</a>
+    <a href="{{ url_for('home') }}">Back to Home</a>
 </body>
 </html>
