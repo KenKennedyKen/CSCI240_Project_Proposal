@@ -5,11 +5,13 @@ from flask import Flask, render_template, request, redirect, url_for, flash
 from mysql.connector import IntegrityError
 from datetime import datetime, date
 
-# secret_key = os.urandom(16)
+# maintain integrity and security of sessions and cookies in applicaiton
+# Dynamic Key
 app = Flask(__name__)
-app.secret_key = 'your_mom_said_stay_static'
+app.secret_key = os.urandom(16)
 
-dir_path = os.path.dirname(os.path.realpath(__file__))
+# holding this path open allows json to be found
+dir_path = os.path.dirname(os.path.realpath(__file__)) # references this script, finds its actual path, finds its directory
 
 with open (os.path.join(dir_path,'secrets.json')) as f:
     secrets= json.load(f)['mysqlCredentials']
@@ -71,8 +73,7 @@ def home():
     return render_template('HOME.html', adventure_logs=formatted_logs)
 
 # Adventure Log
-# Adventure Log table
-
+# Adventure Log table / populates dropdown menu
 @app.route('/new_adventure')
 def new_adventure():
     connection = get_db_connection()
@@ -112,11 +113,12 @@ def create_adventure_log():
     time = request.form.get('time')
     duration_in_hours = request.form.get('duration_in_hours')
 
-    # fetch the skill level of selected entry
+    # 
+    # fetch the skill level of selected entry to ensure safety
     cursor.execute("SELECT DifficultyLevel FROM Activity WHERE ID = %s", (activity_id,))
     activity_difficulty = cursor.fetchone()
 
-    # handeling error if actiity difficulty is none, the activity was not found
+    # handeling error if activity difficulty is none, the activity was not found
     if activity_difficulty is None:
         flash('Selected activity not found.')
         return redirect(url_for('new_adventure'))
@@ -155,9 +157,11 @@ def create_adventure_log():
         cursor.execute(adventure_log_query, (date, time, location_id, activity_id, duration_in_hours))
         adventure_log_id = cursor.lastrowid
 
-        if not isinstance(participant_ids, list): #  ensuring that if you find a lone adventurer, you still treat them as a part of a group for consistency.
+        #  ensuring that if you find a lone adventurer, you still treat them as a part of a group for consistency.
+        if not isinstance(participant_ids, list): 
             participant_ids = [participant_ids]
 
+        # to handle the bridge table, each entity has to be matched to one other entity, hence, for loop
         for participant_id in participant_ids:
             participant_id = int(participant_id) # ensure participant_id is an integer
             adventure_log_participant_query = """
